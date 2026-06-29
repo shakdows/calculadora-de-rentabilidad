@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Rentabilidad · NATTIVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--vino:#9b2330;--oro:#c9a25a;--crema:#faf6f1;--tinta:#2b2326;--gris:#857b80;--verde:#2e7d52;--linea:#e7ddd1}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',sans-serif;background:var(--crema);color:var(--tinta);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 18px}
+  .marca{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:28px;color:var(--vino);letter-spacing:.03em;margin-bottom:4px}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--oro);margin-bottom:26px}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:22px;box-shadow:0 20px 50px -28px rgba(123,26,38,.4);width:100%;max-width:460px;padding:30px 28px}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;text-align:center;margin-bottom:4px}
+  h1 em{color:var(--vino);font-style:italic}
+  .sub{text-align:center;color:var(--gris);font-size:14px;font-weight:300;margin-bottom:26px}
+  .field{margin-bottom:20px}
+  .field label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:500;margin-bottom:8px}
+  .field label b{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--vino)}
+  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--vino),var(--oro))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--vino);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--vino);cursor:pointer}
+  .resultado{margin-top:8px;background:linear-gradient(135deg,var(--vino),#7a1a26);border-radius:18px;padding:26px;text-align:center;color:#fff}
+  .resultado .l{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--oro);opacity:.95}
+  .resultado .big{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:600;line-height:1;margin:8px 0}
+  .resultado .msg{font-size:14px;font-weight:300;opacity:.95}
+  .mini{display:flex;gap:12px;margin-top:14px}
+  .mini div{flex:1;background:#fff;border:1px solid var(--linea);border-radius:14px;padding:14px;text-align:center}
+  .mini .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
+  .mini .v{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--vino);margin-top:2px}
+  .pie{font-size:11.5px;color:var(--gris);font-weight:300;text-align:center;margin-top:18px;font-style:italic}
+</style>
+</head>
+<body>
+  <div class="marca">náttiva</div>
+  <div class="eyebrow">Inversión Inmobiliaria · Barranco</div>
+
+  <div class="card">
+    <h1>¿Tu depa se paga <em>solo</em>?</h1>
+    <p class="sub">Mueve los valores y descúbrelo al instante.</p>
+
+    <div class="field">
+      <label>Precio del departamento <b id="vPrecio">S/ 545,812</b></label>
+      <input type="range" id="precio" min="300000" max="900000" value="545812" step="5000">
+    </div>
+    <div class="field">
+      <label>Precio por noche (Airbnb) <b id="vNoche">S/ 250</b></label>
+      <input type="range" id="noche" min="150" max="500" value="250" step="10">
+    </div>
+    <div class="field">
+      <label>Ocupación del mes <b id="vOcup">65%</b></label>
+      <input type="range" id="ocup" min="40" max="100" value="65">
+    </div>
+
+    <div class="resultado" id="box">
+      <div class="l">Lo que pones tú cada mes</div>
+      <div class="big" id="flujo">S/ 0</div>
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <div class="mini">
+      <div><div class="k">Paga el huésped</div><div class="v" id="paga">0%</div></div>
+      <div><div class="k">Rentabilidad</div><div class="v" id="roi">0%</div></div>
+    </div>
+
+    <p class="pie">Estimación referencial · inicial 20%, plazo 25 años, TCEA 8%. Elaborado por Natali Timaná.</p>
+  </div>
+
+<script>
+const $=id=>document.getElementById(id);
+const S=n=>'S/ '+Math.round(n).toLocaleString('es-PE');
+
+function calc(){
+  const precio=+$('precio').value, noche=+$('noche').value, ocup=+$('ocup').value;
+  $('vPrecio').textContent=S(precio);
+  $('vNoche').textContent=S(noche);
+  $('vOcup').textContent=ocup+'%';
+
+  // cuota banco: inicial 20%, 25 años, TCEA 8%
+  const i=Math.pow(1.08,1/12)-1, n=300;
+  const cuota=(precio*0.8)*i/(1-Math.pow(1+i,-n));
+
+  const noches=Math.round(ocup/100*30);
+  const bruto=noches*noche;
+  const antes=bruto-bruto*0.03-bruto*0.16-300-300;
+  const neto=antes-Math.max(0,antes)*0.18;
+  const flujo=neto-cuota;
+  const roi=(bruto*12/precio)*100;
+  const paga=Math.min(100,Math.max(0,neto/cuota*100));
+
+  const box=$('box');
+  if(flujo>=0){
+    box.style.background='linear-gradient(135deg,#2e7d52,#1f5c3b)';
+    $('box').querySelector('.l').textContent='Te sobra cada mes';
+    $('flujo').textContent='+ '+S(flujo);
+    $('msg').textContent='¡Se paga solo y todavía te deja ganancia!';
+  }else{
+    box.style.background='linear-gradient(135deg,#9b2330,#7a1a26)';
+    $('box').querySelector('.l').textContent='Lo que pones tú cada mes';
+    $('flujo').textContent=S(Math.abs(flujo));
+    $('msg').textContent='El huésped paga el resto. Por esto eres dueño de todo el depa.';
+  }
+  $('paga').textContent=Math.round(paga)+'%';
+  $('roi').textContent=roi.toFixed(1)+'%';
+}
+['precio','noche','ocup'].forEach(id=>$(id).addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
