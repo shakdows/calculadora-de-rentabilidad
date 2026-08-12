@@ -3,191 +3,335 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Rentabilidad · NATTIVA</title>
+<title>Calculadora de Rentabilidad Real · NATTIVA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--vino:#9b2330;--oro:#c9a25a;--crema:#faf6f1;--tinta:#2b2326;--gris:#857b80;
-        --verde:#2e7d52;--ambar:#b6862b;--linea:#e7ddd1;--salmon:#f6d9c8}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Jost',sans-serif;background:var(--crema);color:var(--tinta);
-       display:flex;flex-direction:column;align-items:center;padding:28px 16px 50px}
-  .marca{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:28px;color:var(--vino);letter-spacing:.03em}
-  .eyebrow{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--oro);margin:4px 0 24px}
-  .card{background:#fff;border:1px solid var(--linea);border-radius:22px;
-        box-shadow:0 20px 50px -30px rgba(123,26,38,.4);width:100%;max-width:480px;padding:28px 26px}
-  h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:29px;text-align:center}
-  h1 em{color:var(--vino);font-style:italic}
-  .sub{text-align:center;color:var(--gris);font-size:14px;font-weight:300;margin:4px 0 24px}
+:root{--vino:#9b2330;--oro:#c9a25a;--crema:#faf6f1;--crema2:#f4ede4;
+      --tinta:#2b2326;--gris:#857b80;--verde:#2e7d52;--rojo:#c0392b;--linea:#e6dcd0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;background:var(--crema);color:var(--tinta);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
 
-  .tit{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--vino);
-       font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-  .tit:after{content:"";flex:1;height:1px;background:var(--linea)}
+header{text-align:center;padding:34px 0 14px}
+.marca{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--vino);letter-spacing:.03em}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--oro);margin-top:6px}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4.5vw,42px);font-weight:600;margin-top:8px}
+h1 em{color:var(--vino);font-style:italic}
+.sub{color:var(--gris);font-weight:300;font-size:15px;margin-top:6px}
 
-  .field{margin-bottom:18px}
-  .field label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:500;margin-bottom:7px}
-  .field label b{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--vino)}
-  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--vino),var(--oro))}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-       background:#fff;border:3px solid var(--vino);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--vino);cursor:pointer}
+/* tabs */
+.tabs{display:inline-flex;background:#fff;border:1px solid var(--linea);border-radius:30px;padding:4px;margin-top:20px}
+.tabs button{font-family:'Jost';font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;
+  color:var(--gris);padding:8px 20px;border-radius:24px;transition:.18s}
+.tabs button.on{background:var(--vino);color:#fff}
 
-  .nota-noches{font-size:12.5px;color:var(--gris);background:var(--crema);border:1px dashed var(--linea);
-       border-radius:10px;padding:9px 12px;margin-bottom:20px;text-align:center}
-  .nota-noches b{color:var(--vino);font-weight:600}
+/* kpi bar */
+.kpibar{position:sticky;top:0;z-index:20;background:rgba(250,246,241,.95);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--linea);padding:11px 0;margin:22px 0 24px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:760px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:#fff;border:1px solid var(--linea);border-radius:13px;padding:10px 12px;text-align:center}
+.kpi .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+.kpi .v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1.15;margin-top:1px;color:var(--vino)}
+.kpi .v.p{color:var(--verde)}.kpi .v.n{color:var(--rojo)}
 
-  /* gastos con check */
-  .gastos{border:1px solid var(--linea);border-radius:14px;overflow:hidden;margin-bottom:6px}
-  .g{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--linea);font-size:13.5px}
-  .g:last-child{border-bottom:none}
-  .g .ck{width:17px;height:17px;flex:0 0 17px;border-radius:50%;background:var(--verde);position:relative}
-  .g .ck:after{content:"";position:absolute;left:5px;top:3px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-  .g .nom{flex:1;color:var(--tinta)}
-  .g input{width:62px;font-family:'Jost';font-size:13.5px;text-align:right;padding:5px 7px;
-       border:1px solid var(--linea);border-radius:8px;background:var(--crema);color:var(--vino);font-weight:600}
-  .g input:focus{outline:none;border-color:var(--oro);background:#fff}
-  .g .u{font-size:12px;color:var(--gris);width:22px}
-  .g .monto{font-size:13px;color:var(--gris);width:78px;text-align:right;font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--linea);border-radius:16px;margin-bottom:20px;overflow:hidden}
+.card>h2{background:var(--crema2);font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--vino);padding:11px 16px;border-bottom:1px solid var(--linea)}
+.body{padding:6px 16px 14px}
 
-  /* resumen tipo excel */
-  .res{margin-top:22px;border:1px solid var(--linea);border-radius:14px;overflow:hidden}
-  .res .r{display:flex;justify-content:space-between;padding:11px 14px;font-size:14px;background:#fff;border-bottom:1px solid var(--linea)}
-  .res .r.dest{background:var(--salmon);font-weight:600}
-  .res .r.cuota{background:#fff8c4;font-weight:600;color:var(--vino)}
-  .res .r span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.f{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--linea);font-size:13.5px}
+.f:last-child{border-bottom:none}
+.f .n{flex:1}
+.f .n small{display:block;color:var(--gris);font-size:11px;font-weight:300;line-height:1.3}
+.f input{width:104px;font-family:'Jost';font-size:13.5px;font-weight:600;text-align:right;padding:6px 9px;
+  border:1px solid var(--linea);border-radius:8px;background:var(--crema);color:var(--vino)}
+.f input:focus{outline:none;border-color:var(--oro);background:#fff}
+.f .u{width:24px;font-size:11.5px;color:var(--gris)}
+.f .out{width:104px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.f .usd{width:74px;text-align:right;font-size:12px;color:var(--gris);font-variant-numeric:tabular-nums}
+.f.tot{border-top:1.5px solid var(--vino);border-bottom:none;margin-top:4px;padding-top:10px;font-weight:600}
+.f.tot .out{color:var(--vino);font-family:'Cormorant Garamond',serif;font-size:19px}
+.neg .out{color:var(--rojo)}
+.head{display:flex;gap:10px;padding:6px 0 2px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
+.head .n{flex:1}.head .a{width:104px;text-align:right}.head .b{width:74px;text-align:right}.head .u{width:24px}
 
-  .resultado{margin-top:20px;border-radius:18px;padding:24px;text-align:center;color:#fff}
-  .resultado .l{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.9}
-  .resultado .big{font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:600;line-height:1;margin:6px 0}
-  .resultado .msg{font-size:13.5px;font-weight:300;opacity:.95}
+/* vista simple */
+.simple{max-width:480px;margin:0 auto}
+.field{margin-bottom:18px}
+.field label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:500;margin-bottom:7px}
+.field label b{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--vino)}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--vino),var(--oro))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid var(--vino);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--vino);cursor:pointer}
+.nnoches{font-size:12.5px;color:var(--gris);background:var(--crema);border:1px dashed var(--linea);
+  border-radius:10px;padding:9px 12px;margin-bottom:18px;text-align:center}
+.nnoches b{color:var(--vino);font-weight:600}
+.mini{display:flex;gap:10px;margin-top:12px}
+.mini div{flex:1;background:#fff;border:1px solid var(--linea);border-radius:14px;padding:13px;text-align:center}
+.mini .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
+.mini .v{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--vino);margin-top:2px}
 
-  .mini{display:flex;gap:10px;margin-top:12px}
-  .mini div{flex:1;background:#fff;border:1px solid var(--linea);border-radius:14px;padding:13px;text-align:center}
-  .mini .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris)}
-  .mini .v{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--vino);margin-top:2px}
-  .pie{font-size:11.5px;color:var(--gris);font-weight:300;text-align:center;margin-top:18px;font-style:italic}
+.hero{border-radius:16px;padding:24px;text-align:center;color:#fff;margin-bottom:16px}
+.hero .l{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.92}
+.hero .big{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:600;line-height:1;margin:6px 0}
+.hero .m{font-size:13.5px;font-weight:300;opacity:.95}
+
+.exit{background:linear-gradient(135deg,#fff,var(--crema2));border:1px solid var(--oro)}
+.exit>h2{background:transparent}
+.gan{text-align:center;padding:14px 0 6px}
+.gan .g{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--verde);line-height:1}
+.gan .gl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gris)}
+.nota{font-size:11.5px;color:var(--gris);font-weight:300;font-style:italic;padding:0 16px 14px}
+.hidden{display:none}
+footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;font-weight:300}
 </style>
 </head>
 <body>
+
+<header class="wrap">
   <div class="marca">náttiva</div>
   <div class="eyebrow">Inversión Inmobiliaria · Barranco</div>
-
-  <div class="card">
-    <h1>¿Tu depa se paga <em>solo</em>?</h1>
-    <p class="sub">Mueve los valores y míralo al instante.</p>
-
-    <!-- === RECUADRO ROJO DEL EXCEL === -->
-    <div class="tit">Tu operación</div>
-
-    <div class="field">
-      <label>Precio del departamento <b id="vPrecio">S/ 545,812</b></label>
-      <input type="range" id="precio" min="300000" max="900000" value="545812" step="1000">
-    </div>
-    <div class="field">
-      <label>Precio por noche <b id="vNoche">S/ 250</b></label>
-      <input type="range" id="noche" min="150" max="500" value="250" step="10">
-    </div>
-    <div class="field">
-      <label>Ocupación del mes <b id="vOcup">65%</b></label>
-      <input type="range" id="ocup" min="40" max="100" value="65">
-    </div>
-    <div class="nota-noches">Se alquila <b id="vNoches">20</b> de 30 noches al mes</div>
-
-    <!-- === GASTOS (LOS CHECKS) === -->
-    <div class="tit">Gastos considerados</div>
-    <div class="gastos">
-      <div class="g"><span class="ck"></span><span class="nom">Comisión Airbnb</span>
-        <input type="number" id="cair" value="3" step="0.5"><span class="u">%</span><span class="monto" id="mAir"></span></div>
-      <div class="g"><span class="ck"></span><span class="nom">Comisión administración</span>
-        <input type="number" id="cadm" value="16" step="1"><span class="u">%</span><span class="monto" id="mAdm"></span></div>
-      <div class="g"><span class="ck"></span><span class="nom">Mantenimiento</span>
-        <input type="number" id="mant" value="300" step="50"><span class="u">S/</span><span class="monto" id="mMant"></span></div>
-      <div class="g"><span class="ck"></span><span class="nom">Servicios + arbitrios</span>
-        <input type="number" id="serv" value="300" step="50"><span class="u">S/</span><span class="monto" id="mServ"></span></div>
-      <div class="g"><span class="ck"></span><span class="nom">Impuesto a la renta</span>
-        <input type="number" id="imp" value="18" step="1"><span class="u">%</span><span class="monto" id="mImp"></span></div>
-    </div>
-
-    <!-- === RESUMEN === -->
-    <div class="res">
-      <div class="r dest"><span>Ingreso mensual bruto</span><span id="rBruto"></span></div>
-      <div class="r"><span>Total gastos</span><span id="rGastos"></span></div>
-      <div class="r dest"><span>Ingreso neto</span><span id="rNeto"></span></div>
-      <div class="r cuota"><span>Cuota del banco</span><span id="rCuota"></span></div>
-    </div>
-
-    <div class="resultado" id="box">
-      <div class="l" id="rLabel"></div>
-      <div class="big" id="flujo"></div>
-      <div class="msg" id="msg"></div>
-    </div>
-
-    <div class="mini">
-      <div><div class="k">Paga el huésped</div><div class="v" id="paga"></div></div>
-      <div><div class="k">Rentabilidad</div><div class="v" id="roi"></div></div>
-    </div>
-
-    <p class="pie">Estimación referencial · inicial 20%, plazo 25 años, TCEA 8%. Elaborado por Natali Timaná.</p>
+  <h1>Calculadora de Rentabilidad <em>Real</em></h1>
+  <p class="sub">Compra, financiamiento, operación Airbnb y salida — en un solo cuadro.</p>
+  <div class="tabs">
+    <button id="tabS" class="on">Resumen</button>
+    <button id="tabD">Detalle completo</button>
   </div>
+</header>
+
+<div class="kpibar">
+  <div class="wrap kpis">
+    <div class="kpi"><div class="k">Cuota mensual</div><div class="v" id="kCuota">—</div></div>
+    <div class="kpi"><div class="k">Flujo de caja</div><div class="v" id="kFlujo">—</div></div>
+    <div class="kpi"><div class="k">Rentab. bruta</div><div class="v" id="kRoi">—</div></div>
+    <div class="kpi"><div class="k">Retorno al salir</div><div class="v p" id="kExit">—</div></div>
+  </div>
+</div>
+
+<!-- ============ VISTA RESUMEN ============ -->
+<div class="wrap simple" id="vistaSimple">
+  <div class="card"><div class="body" style="padding-top:16px">
+    <div class="field"><label>Precio del departamento <b id="sPrecio"></b></label>
+      <input type="range" id="rPrecio" min="300000" max="1200000" step="1000" value="737884"></div>
+    <div class="field"><label>Precio por noche <b id="sNoche"></b></label>
+      <input type="range" id="rNoche" min="150" max="600" step="5" value="305"></div>
+    <div class="field"><label>Ocupación del mes <b id="sOcup"></b></label>
+      <input type="range" id="rOcup" min="40" max="100" value="75"></div>
+    <div class="nnoches">Se alquilan <b id="sNoches"></b> de <b id="sDias"></b> noches disponibles</div>
+  </div></div>
+
+  <div class="hero" id="hero">
+    <div class="l" id="hLabel"></div><div class="big" id="hBig"></div><div class="m" id="hMsg"></div>
+  </div>
+  <div class="mini">
+    <div><div class="k">Paga el huésped</div><div class="v" id="sPaga"></div></div>
+    <div><div class="k">Ganancia al vender</div><div class="v" id="sGan"></div></div>
+  </div>
+  <p class="nota" style="text-align:center;padding-top:14px">Los supuestos de crédito y gastos están en «Detalle completo».</p>
+</div>
+
+<!-- ============ VISTA DETALLE ============ -->
+<div class="wrap hidden" id="vistaDetalle">
+ <div class="cols">
+  <div>
+    <div class="card"><h2>Precio de compra</h2><div class="body">
+      <div class="head"><span class="n"></span><span class="a">S/</span><span class="u"></span><span class="b">US$</span></div>
+      <div class="f"><span class="n">Valor del depa</span><input type="number" id="valor" value="737884" step="1000"><span class="u"></span><span class="usd" id="uValor"></span></div>
+      <div class="f"><span class="n">Cuota inicial</span><input type="number" id="inicialPct" value="20" step="1"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Monto de la inicial</span><span class="out" id="oInicial"></span><span class="u"></span><span class="usd" id="uInicial"></span></div>
+      <div class="f"><span class="n">Metraje</span><input type="number" id="m2" value="40.47" step="0.01"><span class="u">m²</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Valor por m²</span><span class="out" id="oM2"></span><span class="u"></span><span class="usd" id="uM2"></span></div>
+      <div class="f"><span class="n">Tipo de cambio</span><input type="number" id="tc" value="3.50" step="0.01"><span class="u">S/</span><span class="usd"></span></div>
+    </div></div>
+
+    <div class="card"><h2>Inversión adicional (sin inicial)</h2><div class="body">
+      <div class="f"><span class="n">Impuesto de alcabala</span><input type="number" id="alcabala" value="0" step="100"><span class="u"></span><span class="usd" id="uAlc"></span></div>
+      <div class="f"><span class="n">Amoblado</span><input type="number" id="amoblado" value="15000" step="500"><span class="u"></span><span class="usd" id="uAmo"></span></div>
+      <div class="f"><span class="n">Costos registrales / notariales</span><input type="number" id="notaria" value="5000" step="500"><span class="u"></span><span class="usd" id="uNot"></span></div>
+      <div class="f"><span class="n">Inspección<small>S/ por m² techado</small></span><input type="number" id="inspM2" value="10" step="1"><span class="u">S/</span><span class="usd" id="uIns"></span></div>
+      <div class="f tot"><span class="n">Desembolso total de bolsillo</span><span class="out" id="oBolsillo"></span><span class="u"></span><span class="usd" id="uBolsillo"></span></div>
+    </div><p class="nota">Inicial + gastos de cierre + amoblado. Es el dinero real que sale de tu cuenta.</p></div>
+
+    <div class="card"><h2>Préstamo hipotecario</h2><div class="body">
+      <div class="f"><span class="n">Monto financiado</span><span class="out" id="oFin"></span><span class="u"></span><span class="usd" id="uFin"></span></div>
+      <div class="f"><span class="n">Plazo</span><input type="number" id="plazoM" value="360" step="12"><span class="u">m</span><span class="usd" id="uPlazo"></span></div>
+      <div class="f"><span class="n">TCEA</span><input type="number" id="tcea" value="8" step="0.1"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">TEM (tasa mensual)</span><span class="out" id="oTem"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Amortización<small>1ª cuota</small></span><span class="out" id="oAmort"></span><span class="u"></span><span class="usd" id="uAmort"></span></div>
+      <div class="f"><span class="n">Interés<small>1ª cuota</small></span><span class="out" id="oInt"></span><span class="u"></span><span class="usd" id="uInt"></span></div>
+      <div class="f"><span class="n">Seguro desgrav. + inmueble</span><input type="number" id="seguro" value="300" step="10"><span class="u"></span><span class="usd" id="uSeg"></span></div>
+      <div class="f tot"><span class="n">Cuota mensual total</span><span class="out" id="oCuota"></span><span class="u"></span><span class="usd" id="uCuota"></span></div>
+    </div></div>
+  </div>
+
+  <div>
+    <div class="card"><h2>Ingresos operativos (Airbnb)</h2><div class="body">
+      <div class="f"><span class="n">Días disponibles al mes</span><input type="number" id="dias" value="27" step="1"><span class="u">d</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Tasa de ocupación</span><input type="number" id="ocup" value="75" step="1"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Precio por noche</span><input type="number" id="noche" value="305" step="5"><span class="u"></span><span class="usd" id="uNoche"></span></div>
+      <div class="f"><span class="n">Noches vendidas</span><span class="out" id="oNoches"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f tot"><span class="n">Ingreso mensual bruto</span><span class="out" id="oBruto"></span><span class="u"></span><span class="usd" id="uBruto"></span></div>
+    </div></div>
+
+    <div class="card"><h2>Gastos operativos</h2><div class="body">
+      <div class="head"><span class="n">Anuales (prorrateados)</span><span class="a"></span><span class="u"></span><span class="b">mes</span></div>
+      <div class="f"><span class="n">Arbitrios (año)</span><input type="number" id="arbitrios" value="250" step="10"><span class="u"></span><span class="usd" id="uArb"></span></div>
+      <div class="f"><span class="n">Predial (año)</span><input type="number" id="predial" value="550" step="10"><span class="u"></span><span class="usd" id="uPre"></span></div>
+      <div class="head" style="margin-top:8px"><span class="n">Porcentuales</span><span class="a"></span><span class="u"></span><span class="b">mes</span></div>
+      <div class="f"><span class="n">Gestor Airbnb (comisión)</span><input type="number" id="gestor" value="18" step="0.5"><span class="u">%</span><span class="usd" id="uGes"></span></div>
+      <div class="f"><span class="n">Impuesto a la renta</span><input type="number" id="renta" value="5" step="0.5"><span class="u">%</span><span class="usd" id="uRen"></span></div>
+      <div class="head" style="margin-top:8px"><span class="n">Mensuales fijos</span><span class="a">S/</span><span class="u"></span><span class="b"></span></div>
+      <div class="f"><span class="n">Mantenimiento</span><input type="number" id="mant" value="94" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Luz</span><input type="number" id="luz" value="130" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Internet</span><input type="number" id="internet" value="90" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Streaming / cable</span><input type="number" id="netflix" value="0" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Gas</span><input type="number" id="gas" value="0" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Limpieza</span><input type="number" id="limpieza" value="262.5" step="10"><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Emergencias y reparaciones</span><input type="number" id="emerg" value="0" step="50"><span class="u"></span><span class="usd"></span></div>
+      <div class="f tot neg"><span class="n">Total gastos operativos</span><span class="out" id="oGastos"></span><span class="u"></span><span class="usd" id="uGastos"></span></div>
+    </div></div>
+
+    <div class="card"><h2>Flujo mensual</h2><div class="body">
+      <div class="f"><span class="n">Ingreso bruto</span><span class="out" id="fBruto"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f neg"><span class="n">Gastos operativos</span><span class="out" id="fGastos"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Flujo operativo (NOI)</span><span class="out" id="fNoi"></span><span class="u"></span><span class="usd" id="uNoi"></span></div>
+      <div class="f neg"><span class="n">Cuota del banco</span><span class="out" id="fCuota"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f tot"><span class="n">Flujo de caja</span><span class="out" id="fFlujo"></span><span class="u"></span><span class="usd" id="uFlujo"></span></div>
+    </div></div>
+  </div>
+ </div>
+
+ <div class="card exit"><h2>Precio de venta (salida)</h2>
+  <div class="cols" style="gap:0">
+    <div class="body">
+      <div class="f"><span class="n">Valorización del proyecto<small>Edifica estima 10%–12%</small></span><input type="number" id="valProy" value="5" step="1"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Valorización anual</span><input type="number" id="valAnual" value="3" step="0.5"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">Años que mantienes el depa</span><input type="number" id="anios" value="5" step="1"><span class="u">a</span><span class="usd"></span></div>
+      <div class="f tot"><span class="n">Precio de venta esperado</span><span class="out" id="oVenta"></span><span class="u"></span><span class="usd" id="uVenta"></span></div>
+    </div>
+    <div class="body">
+      <div class="f"><span class="n">Deuda pendiente al vender</span><span class="out" id="oSaldo"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Capital acumulado (venta − deuda)</span><span class="out" id="oEquity"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f"><span class="n">Flujo de caja acumulado<small id="lblAcum"></small></span><span class="out" id="oAcum"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="f neg"><span class="n">Dinero que pusiste</span><span class="out" id="oPuesto"></span><span class="u"></span><span class="usd"></span></div>
+      <div class="gan"><div class="gl">Ganancia total al vender</div><div class="g" id="oGanancia"></div>
+        <div class="gl" style="margin-top:4px">Retorno sobre tu dinero: <b id="oMult"></b></div></div>
+    </div>
+  </div>
+  <p class="nota">La ganancia suma tres fuentes: el flujo mensual, la deuda que pagó el huésped (amortización) y la valorización del inmueble.</p>
+ </div>
+</div>
+
+<footer>náttiva · Análisis de inversión inmobiliaria · Elaborado por Natali Timaná<br>
+Modelo referencial. No constituye asesoría financiera ni tributaria formal.</footer>
 
 <script>
 const $=id=>document.getElementById(id);
-const S=n=>'S/ '+Math.round(n).toLocaleString('es-PE');
+const v=id=>parseFloat($(id).value)||0;
+const S=n=>(n<0?'– ':'')+'S/ '+Math.abs(n).toLocaleString('es-PE',{maximumFractionDigits:0});
+const D=n=>'$ '+Math.abs(n).toLocaleString('es-PE',{maximumFractionDigits:0});
+
+/* --- tabs --- */
+$('tabS').onclick=()=>{$('tabS').classList.add('on');$('tabD').classList.remove('on');
+  $('vistaSimple').classList.remove('hidden');$('vistaDetalle').classList.add('hidden')};
+$('tabD').onclick=()=>{$('tabD').classList.add('on');$('tabS').classList.remove('on');
+  $('vistaDetalle').classList.remove('hidden');$('vistaSimple').classList.add('hidden')};
+
+/* --- sincronía entre vistas --- */
+const link=[['rPrecio','valor'],['rNoche','noche'],['rOcup','ocup']];
+link.forEach(([a,b])=>{
+  $(a).addEventListener('input',()=>{$(b).value=$(a).value;calc()});
+  $(b).addEventListener('input',()=>{$(a).value=$(b).value;calc()});
+});
 
 function calc(){
-  const precio=+$('precio').value, noche=+$('noche').value, ocup=+$('ocup').value;
-  const cair=+$('cair').value||0, cadm=+$('cadm').value||0;
-  const mant=+$('mant').value||0, serv=+$('serv').value||0, imp=+$('imp').value||0;
+  const tc=v('tc')||3.5, valor=v('valor'), m2=v('m2');
+  const inicial=valor*v('inicialPct')/100, financiado=valor-inicial;
 
-  const noches=Math.round(ocup/100*30);
-  $('vPrecio').textContent=S(precio);
-  $('vNoche').textContent=S(noche);
-  $('vOcup').textContent=ocup+'%';
-  $('vNoches').textContent=noches;
+  $('oInicial').textContent=S(inicial); $('uInicial').textContent=D(inicial/tc);
+  $('uValor').textContent=D(valor/tc);
+  $('oM2').textContent=m2?S(valor/m2):'—'; $('uM2').textContent=m2?D(valor/m2/tc):'';
 
-  const bruto=noches*noche;
-  const gAir=bruto*cair/100, gAdm=bruto*cadm/100;
-  const antes=bruto-gAir-gAdm-mant-serv;
-  const gImp=Math.max(0,antes)*imp/100;
-  const neto=antes-gImp;
-  const gastos=gAir+gAdm+mant+serv+gImp;
+  const insp=v('inspM2')*m2;
+  const bolsillo=inicial+v('alcabala')+v('amoblado')+v('notaria')+insp;
+  $('uAlc').textContent=D(v('alcabala')/tc); $('uAmo').textContent=D(v('amoblado')/tc);
+  $('uNot').textContent=D(v('notaria')/tc); $('uIns').textContent=S(insp);
+  $('oBolsillo').textContent=S(bolsillo); $('uBolsillo').textContent=D(bolsillo/tc);
 
-  $('mAir').textContent='– '+S(gAir);
-  $('mAdm').textContent='– '+S(gAdm);
-  $('mMant').textContent='– '+S(mant);
-  $('mServ').textContent='– '+S(serv);
-  $('mImp').textContent='– '+S(gImp);
+  const n=v('plazoM'), i=Math.pow(1+v('tcea')/100,1/12)-1;
+  const capital=(i>0&&n>0)?financiado*i/(1-Math.pow(1+i,-n)):0;
+  const interes1=financiado*i, amort1=capital-interes1, cuota=capital+v('seguro');
+  $('oFin').textContent=S(financiado); $('uFin').textContent=D(financiado/tc);
+  $('uPlazo').textContent=(n/12).toFixed(0)+' años';
+  $('oTem').textContent=(i*100).toFixed(2)+'%';
+  $('oAmort').textContent=S(amort1); $('uAmort').textContent=D(amort1/tc);
+  $('oInt').textContent=S(interes1); $('uInt').textContent=D(interes1/tc);
+  $('uSeg').textContent=D(v('seguro')/tc);
+  $('oCuota').textContent=S(cuota); $('uCuota').textContent=D(cuota/tc);
 
-  // cuota: inicial 20%, 25 años, TCEA 8%
-  const i=Math.pow(1.08,1/12)-1;
-  const cuota=(precio*0.8)*i/(1-Math.pow(1+i,-300));
+  const noches=v('dias')*v('ocup')/100, bruto=noches*v('noche');
+  $('oNoches').textContent=noches.toFixed(1)+' noches';
+  $('oBruto').textContent=S(bruto); $('uBruto').textContent=D(bruto/tc);
+  $('uNoche').textContent=D(v('noche')/tc);
 
-  const flujo=neto-cuota;
-  const roi=(bruto*12/precio)*100;
-  const paga=Math.min(100,Math.max(0,neto/cuota*100));
+  const arb=v('arbitrios')/12, pre=v('predial')/12, ges=bruto*v('gestor')/100;
+  const fijos=v('mant')+v('luz')+v('internet')+v('netflix')+v('gas')+v('limpieza')+v('emerg');
+  const ren=Math.max(0,bruto-arb-pre-ges-fijos)*v('renta')/100;
+  const gastos=arb+pre+ges+fijos+ren, noi=bruto-gastos, flujo=noi-cuota;
+  $('uArb').textContent=S(arb); $('uPre').textContent=S(pre);
+  $('uGes').textContent=S(ges); $('uRen').textContent=S(ren);
+  $('oGastos').textContent=S(gastos); $('uGastos').textContent=D(gastos/tc);
+  $('fBruto').textContent=S(bruto); $('fGastos').textContent='– '+S(gastos);
+  $('fNoi').textContent=S(noi); $('uNoi').textContent=D(noi/tc);
+  $('fCuota').textContent='– '+S(cuota);
+  $('fFlujo').textContent=(flujo>=0?'+ ':'– ')+S(Math.abs(flujo)); $('uFlujo').textContent=D(flujo/tc);
 
-  $('rBruto').textContent=S(bruto);
-  $('rGastos').textContent='– '+S(gastos);
-  $('rNeto').textContent=S(neto);
-  $('rCuota').textContent='– '+S(cuota);
+  /* vista simple */
+  $('sPrecio').textContent=S(valor); $('sNoche').textContent=S(v('noche'));
+  $('sOcup').textContent=v('ocup')+'%';
+  $('sNoches').textContent=noches.toFixed(0); $('sDias').textContent=v('dias');
+  $('sPaga').textContent=Math.round(Math.min(100,Math.max(0,noi/cuota*100)))+'%';
 
-  const box=$('box');
+  const hero=$('hero');
   if(flujo>=0){
-    box.style.background='linear-gradient(135deg,#2e7d52,#1f5c3b)';
-    $('rLabel').textContent='Te sobra cada mes';
-    $('flujo').textContent='+ '+S(flujo);
-    $('msg').textContent='Se paga solo y todavía te deja ganancia.';
+    hero.style.background='linear-gradient(135deg,#2e7d52,#1f5c3b)';
+    $('hLabel').textContent='Te sobra cada mes'; $('hBig').textContent='+ '+S(flujo);
+    $('hMsg').textContent='La propiedad se paga sola y te deja utilidad.';
   }else{
-    box.style.background='linear-gradient(135deg,#c0392b,#8a1f18)';
-    $('rLabel').textContent='Lo que pones tú cada mes';
-    $('flujo').textContent=S(Math.abs(flujo));
-    $('msg').textContent='El huésped paga el resto y tú eres dueño del 100% del depa.';
+    hero.style.background='linear-gradient(135deg,#c0392b,#8a1f18)';
+    $('hLabel').textContent='Lo que pones tú cada mes'; $('hBig').textContent=S(Math.abs(flujo));
+    $('hMsg').textContent='El huésped cubre el resto y tú eres dueño del 100% del activo.';
   }
-  $('paga').textContent=Math.round(paga)+'%';
-  $('roi').textContent=roi.toFixed(1)+'%';
+
+  /* salida */
+  const anios=v('anios');
+  const venta=valor*(1+v('valProy')/100)*Math.pow(1+v('valAnual')/100,anios);
+  const meses=Math.min(anios*12,n);
+  const saldo=(i>0&&n>0)?financiado*(Math.pow(1+i,n)-Math.pow(1+i,meses))/(Math.pow(1+i,n)-1):financiado;
+  const equity=venta-saldo, acum=flujo*meses;
+  const ganancia=equity+acum-bolsillo, mult=bolsillo>0?(equity+acum)/bolsillo:0;
+  $('oVenta').textContent=S(venta); $('uVenta').textContent=D(venta/tc);
+  $('oSaldo').textContent=S(saldo); $('oEquity').textContent=S(equity);
+  $('lblAcum').textContent=anios+' años × '+S(flujo)+'/mes';
+  $('oAcum').textContent=S(acum); $('oPuesto').textContent='– '+S(bolsillo);
+  $('oGanancia').textContent=S(ganancia);
+  $('oGanancia').style.color=ganancia>=0?'var(--verde)':'var(--rojo)';
+  $('oMult').textContent=mult.toFixed(2)+'x';
+  $('sGan').textContent=S(ganancia);
+
+  /* kpis */
+  $('kCuota').textContent=S(cuota);
+  $('kFlujo').textContent=(flujo>=0?'+ ':'– ')+'S/ '+Math.abs(Math.round(flujo)).toLocaleString('es-PE');
+  $('kFlujo').className='v '+(flujo>=0?'p':'n');
+  $('kRoi').textContent=(bruto*12/valor*100).toFixed(1)+'%';
+  $('kExit').textContent=mult.toFixed(2)+'x';
 }
-['precio','noche','ocup','cair','cadm','mant','serv','imp']
-  .forEach(id=>$(id).addEventListener('input',calc));
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
 calc();
 </script>
 </body>
