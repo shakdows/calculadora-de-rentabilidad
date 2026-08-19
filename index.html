@@ -253,7 +253,6 @@ footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;fo
 <div class="cargando" id="cargando"><div class="t">Generando archivo…</div><div class="s" id="cargTxt"></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"></script>
 <footer>náttiva · Análisis de inversión inmobiliaria · Elaborado por Natali Timaná<br>
 Modelo referencial. No constituye asesoría financiera ni tributaria formal.</footer>
 
@@ -364,6 +363,39 @@ calc();
 
 <script>
 /* ================= EXPORTACIÓN PDF / PPT ================= */
+
+/* ---- carga bajo demanda con respaldo entre CDNs ---- */
+function cargarScript(url){
+  return new Promise((ok,fail)=>{
+    const t=document.createElement('script');
+    t.src=url; t.async=true;
+    t.onload=()=>ok(url);
+    t.onerror=()=>fail(new Error('no cargó '+url));
+    document.head.appendChild(t);
+  });
+}
+async function asegurar(test,urls,nombre){
+  if(test()) return true;
+  for(const u of urls){
+    try{ await cargarScript(u); if(test()) return true; }catch(e){ /* siguiente CDN */ }
+  }
+  throw new Error('No se pudo cargar '+nombre+'. Revisa tu conexión a internet.');
+}
+const PPTX=()=>window.PptxGenJS||window.pptxgen;
+const listaPPTX=[
+  'https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',
+  'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',
+  'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js'
+];
+const listaH2C=[
+  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+  'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
+];
+const listaPDF=[
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'
+];
+
 const carg=(txt)=>{document.getElementById('cargTxt').textContent=txt||'';
   document.getElementById('cargando').classList.add('on')};
 const cargOff=()=>document.getElementById('cargando').classList.remove('on');
@@ -431,7 +463,8 @@ async function aPDF(cards,nombre){
 
 /* ---------- PPT: un cuadro por diapositiva ---------- */
 async function aPPT(cards,nombre){
-  const pptx=new PptxGenJS();
+  const Ctor=PPTX();
+  const pptx=new Ctor();
   pptx.layout='LAYOUT_16x9';           /* 10 x 5.625 pulgadas */
   for(let k=0;k<cards.length;k++){
     carg('Diapositiva '+(k+1)+' de '+cards.length);
@@ -454,20 +487,26 @@ async function aPPT(cards,nombre){
 }
 
 /* ---------- disparadores ---------- */
-async function exportarTodo(tipo){
-  const cards=cuadros();
-  carg('Preparando…');
-  try{ tipo==='pdf' ? await aPDF(cards,'Rentabilidad-Nattiva')
-                    : await aPPT(cards,'Rentabilidad-Nattiva'); }
-  catch(e){ alert('No se pudo generar el archivo: '+e.message); }
+async function prepararLibs(tipo){
+  await asegurar(()=>window.html2canvas, listaH2C, 'html2canvas');
+  if(tipo==='pdf') await asegurar(()=>window.jspdf&&window.jspdf.jsPDF, listaPDF, 'jsPDF');
+  else             await asegurar(()=>!!PPTX(), listaPPTX, 'PptxGenJS');
+}
+async function exportar(cards,tipo,nombre){
+  carg('Cargando herramientas…');
+  try{
+    await prepararLibs(tipo);
+    tipo==='pdf' ? await aPDF(cards,nombre) : await aPPT(cards,nombre);
+  }catch(e){
+    alert('No se pudo generar el archivo.\n\n'+e.message);
+    console.error(e);
+  }
   cargOff();
 }
-async function exportarUno(card,tipo){
+function exportarTodo(tipo){ exportar(cuadros(),tipo,'Rentabilidad-Nattiva'); }
+function exportarUno(card,tipo){
   const n='Nattiva-'+tituloCard(card).replace(/[^\wáéíóúñÁÉÍÓÚÑ ]/g,'').replace(/\s+/g,'-');
-  carg('Preparando…');
-  try{ tipo==='pdf' ? await aPDF([card],n) : await aPPT([card],n); }
-  catch(e){ alert('No se pudo generar el archivo: '+e.message); }
-  cargOff();
+  exportar([card],tipo,n);
 }
 
 /* ---------- inyecta los botones en cada cuadro ---------- */
