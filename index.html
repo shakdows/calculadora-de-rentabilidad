@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Rentabilidad Real · NATTIVA</title>
+<title>Calculadora de Rentabilidad Estimada · NATTIVA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -88,6 +88,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .gan .gl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gris)}
 .nota{font-size:11.5px;color:var(--gris);font-weight:300;font-style:italic;padding:0 16px 14px}
 .hidden{display:none}
+.legal{font-size:10.5px;line-height:1.45;color:#9a9296;font-weight:300;text-align:center;
+  max-width:620px;margin:14px auto 0;letter-spacing:.01em}
+.legal.top{margin-top:16px;padding-top:12px;border-top:1px solid var(--linea)}
 /* ==== exportación ==== */
 .card>h2{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .expbtns{display:flex;gap:6px}
@@ -114,7 +117,7 @@ footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;fo
 <header class="wrap">
   <div class="marca">náttiva</div>
   <div class="eyebrow">Inversión Inmobiliaria · Barranco</div>
-  <h1>Calculadora de Rentabilidad <em>Real</em></h1>
+  <h1>Calculadora de Rentabilidad <em>Estimada</em></h1>
   <p class="sub">Compra, financiamiento, operación Airbnb y salida — en un solo cuadro.</p>
   <div class="tabs">
     <button id="tabS" class="on">Resumen</button>
@@ -124,6 +127,7 @@ footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;fo
     <button class="solid" onclick="exportarTodo('pdf')">Descargar PDF completo</button>
     <button onclick="exportarTodo('ppt')">Descargar PPT completo</button>
   </div>
+  <p class="legal top">Simulación referencial. Los resultados dependen de los supuestos utilizados y no garantizan rentabilidad futura. Las condiciones de financiamiento son estimadas; consulte la TCEA y condiciones vigentes directamente con la entidad financiera.</p>
 </header>
 
 <div class="kpibar">
@@ -182,7 +186,7 @@ footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;fo
     <div class="card"><h2>Préstamo hipotecario</h2><div class="body">
       <div class="f"><span class="n">Monto financiado</span><span class="out" id="oFin"></span><span class="u"></span><span class="usd" id="uFin"></span></div>
       <div class="f"><span class="n">Plazo</span><input type="number" id="plazoM" value="360" step="12"><span class="u">m</span><span class="usd" id="uPlazo"></span></div>
-      <div class="f"><span class="n">TCEA</span><input type="number" id="tcea" value="8" step="0.1"><span class="u">%</span><span class="usd"></span></div>
+      <div class="f"><span class="n">TCEA<small>Valor referencial. La TCEA aplicable será determinada por la entidad financiera según evaluación crediticia y condiciones vigentes.</small></span><input type="number" id="tcea" value="8" step="0.1"><span class="u">%</span><span class="usd"></span></div>
       <div class="f"><span class="n">TEM (tasa mensual)</span><span class="out" id="oTem"></span><span class="u"></span><span class="usd"></span></div>
       <div class="f"><span class="n">Amortización<small>1ª cuota</small></span><span class="out" id="oAmort"></span><span class="u"></span><span class="usd" id="uAmort"></span></div>
       <div class="f"><span class="n">Interés<small>1ª cuota</small></span><span class="out" id="oInt"></span><span class="u"></span><span class="usd" id="uInt"></span></div>
@@ -253,8 +257,8 @@ footer{text-align:center;padding:26px 0 46px;color:var(--gris);font-size:12px;fo
 <div class="cargando" id="cargando"><div class="t">Generando archivo…</div><div class="s" id="cargTxt"></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<footer>náttiva · Análisis de inversión inmobiliaria · Elaborado por Natali Timaná<br>
-Modelo referencial. No constituye asesoría financiera ni tributaria formal.</footer>
+<footer>náttiva · Análisis de inversión inmobiliaria · Elaborado por Natali Timaná
+<p class="legal">Simulación referencial. Los resultados dependen de los supuestos utilizados y no garantizan rentabilidad futura. Las condiciones de financiamiento son estimadas; consulte la TCEA y condiciones vigentes directamente con la entidad financiera.</p></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -429,6 +433,7 @@ function cuadros(){
 }
 
 const HOY=new Date().toLocaleDateString('es-PE');
+const LEGAL='Simulación referencial. Los resultados dependen de los supuestos utilizados y no garantizan rentabilidad futura. Las condiciones de financiamiento son estimadas; consulte la TCEA y condiciones vigentes directamente con la entidad financiera.';
 
 /* ---------- PDF: un cuadro por hoja ---------- */
 async function aPDF(cards,nombre){
@@ -443,7 +448,7 @@ async function aPDF(cards,nombre){
     pdf.setTextColor(155,35,48); pdf.setFont('helvetica','bold'); pdf.setFontSize(16);
     pdf.text('náttiva',M,18);
     pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(133,123,128);
-    pdf.text('Calculadora de Rentabilidad Real  ·  '+HOY,M,23);
+    pdf.text('Calculadora de Rentabilidad Estimada  ·  '+HOY,M,23);
     pdf.setDrawColor(230,220,208); pdf.line(M,26,W-M,26);
     /* título del cuadro */
     pdf.setFontSize(12); pdf.setTextColor(43,35,38); pdf.setFont('helvetica','bold');
@@ -454,9 +459,11 @@ async function aPDF(cards,nombre){
     if(h>maxH){h=maxH;w=canvas.width*h/canvas.height;}
     pdf.addImage(canvas.toDataURL('image/png'),'PNG',(W-w)/2,40,w,h);
     /* pie */
-    pdf.setFontSize(7); pdf.setTextColor(133,123,128); pdf.setFont('helvetica','italic');
-    pdf.text('Elaborado por Natali Timaná · Modelo referencial, no constituye asesoría financiera.',M,H-10);
-    pdf.text(String(k+1),W-M,H-10,{align:'right'});
+    pdf.setFontSize(6.5); pdf.setTextColor(150,142,146); pdf.setFont('helvetica','italic');
+    pdf.text(pdf.splitTextToSize(LEGAL,W-M*2-14),M,H-18);
+    pdf.setFontSize(6.5); pdf.setTextColor(133,123,128);
+    pdf.text('Elaborado por Natali Timaná · náttiva',M,H-7);
+    pdf.text(String(k+1),W-M,H-7,{align:'right'});
   }
   pdf.save(nombre+'.pdf');
 }
@@ -480,8 +487,9 @@ async function aPPT(cards,nombre){
     let w=maxW,h=canvas.height*w/canvas.width;
     if(h>maxH){h=maxH;w=canvas.width*h/canvas.height;}
     s.addImage({data:canvas.toDataURL('image/png'),x:(10-w)/2,y:1.05,w:w,h:h});
-    s.addText('Elaborado por Natali Timaná · '+HOY+' · Modelo referencial',
-      {x:0.4,y:5.15,w:9.2,h:0.3,fontSize:8,italic:true,color:'857B80'});
+    s.addText(LEGAL,{x:0.4,y:4.88,w:9.2,h:0.38,fontSize:6.5,italic:true,color:'9A9296',valign:'top'});
+    s.addText('Elaborado por Natali Timaná · náttiva · '+HOY,
+      {x:0.4,y:5.28,w:9.2,h:0.25,fontSize:7.5,color:'857B80'});
   }
   await pptx.writeFile({fileName:nombre+'.pptx'});
 }
