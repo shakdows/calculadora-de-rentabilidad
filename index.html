@@ -358,7 +358,7 @@ function calc(){
   $('kCuota').textContent=S(cuota);
   $('kFlujo').textContent=(flujo>=0?'+ ':'– ')+'S/ '+Math.abs(Math.round(flujo)).toLocaleString('es-PE');
   $('kFlujo').className='v '+(flujo>=0?'p':'n');
-  $('kRoi').textContent=(bruto*12/valor*100).toFixed(1)+'%';
+  $('kRoi').textContent=valor>0?(noi*12/valor*100).toFixed(1)+'%':'—';
   $('kExit').textContent=mult.toFixed(2)+'x';
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
